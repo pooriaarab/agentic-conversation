@@ -1,6 +1,6 @@
 {
-  "name": "agentic-chat",
-  "version": "0.1.1",
+  "name": "agentic-conversation",
+  "version": "0.1.0",
   "description": "Send one opted-in WhatsApp, Telegram, or Facebook Messenger message from a safe CLI, MCP server, or agent.",
   "keywords": [
     "whatsapp",
@@ -16,7 +16,7 @@
   "author": "Pooria Arab",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pooriaarab/agentic-chat.git"
+    "url": "git+https://github.com/pooriaarab/agentic-conversation.git"
   },
   "type": "module",
   "engines": {
@@ -38,8 +38,8 @@
     }
   },
   "bin": {
-    "agentic-chat": "./dist/cli.js",
-    "agentic-chat-mcp": "./dist/mcp-bin.js"
+    "agentic-conversation": "./dist/cli.js",
+    "agentic-conversation-mcp": "./dist/mcp-bin.js"
   },
   "scripts": {
     "build": "tsup",
