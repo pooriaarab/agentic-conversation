@@ -1,8 +1,6 @@
 # agentic-chat
 
-Send one message to an opted-in contact.
-
-WhatsApp, Telegram, or Messenger. Dry run is the default.
+Send one opted-in WhatsApp, Telegram, or Facebook Messenger message. Use the CLI, MCP server, or SDK. The default command is a dry run and does not use the network.
 
 ## Install
 
@@ -10,46 +8,43 @@ WhatsApp, Telegram, or Messenger. Dry run is the default.
 npm install agentic-chat
 ```
 
+## Vendors
+
+| Brand | Environment key | Live command |
+| --- | --- | --- |
+| WhatsApp | `WHATSAPP_ACCESS_TOKEN` | `agentic-chat send --channel whatsapp --contact <id> --message "Hello" --opted-in true --live` |
+| Telegram | `TELEGRAM_BOT_TOKEN` | `agentic-chat send --channel telegram --contact <id> --message "Hello" --opted-in true --live` |
+| Facebook Messenger | `MESSENGER_PAGE_ACCESS_TOKEN` | `agentic-chat send --channel messenger --contact <id> --message "Hello" --opted-in true --live` |
+
+Live delivery needs the matching official adapter in your app. WhatsApp also needs a phone number ID. Do not pass `--live` until that adapter is configured.
+
 ## Quick start
 
-This previews a Telegram message. It does not send it.
+This is a dry run. It exits 0 and does not use the network.
 
 ```sh
 npx agentic-chat send --channel telegram --contact fixture-contact \
   --message "Hello" --opted-in true
 ```
 
-Add `--live` only after you configure a vendor adapter in your app. A
-live call without one returns a clear error. Vendor errors are returned
-unchanged.
-
-## Three uses
-
-### CLI
-
-Use the command to preview one message. Pass `--live` to deliver.
-
-```sh
-agentic-chat send --channel whatsapp --contact fixture-contact \
-  --message "Hello" --opted-in true
-```
-
-### Library
-
-Use the same JSON shape in code.
+## Library
 
 ```js
-import { sendMessage } from "agentic-chat";
+import { createTelegramAdapter, sendMessage } from "agentic-chat";
 
-const preview = await sendMessage({
+const adapter = createTelegramAdapter({
+  accessToken: process.env.TELEGRAM_BOT_TOKEN,
+});
+
+await sendMessage({
   channel: "telegram",
   contact: "fixture-contact",
   message: "Hello",
   optedIn: true,
-});
+}, { dryRun: false, adapter });
 ```
 
-### MCP
+## MCP
 
 Start the server and call `send_message` or `log_stop`.
 
@@ -57,15 +52,11 @@ Start the server and call `send_message` or `log_stop`.
 npx agentic-chat mcp
 ```
 
-`send_message` is dry run by default. It requires `optedIn: true`.
-Give it quiet hours to stop sends during that window. Use `log_stop` to
-record an inbound `STOP` opt-out.
+`send_message` is a dry run by default. It requires `optedIn: true`. Set quiet hours to block sends during that window. Use `log_stop` for an inbound `STOP` opt-out.
 
 ## Safety
 
-The pack does not send to contacts that have not opted in. It honors
-quiet hours. It logs STOP events. Tests use fixtures and make no network
-calls.
+The pack blocks contacts without opt-in. It honors quiet hours. It logs STOP events. Vendor errors are not reported as success.
 
 ## License
 
