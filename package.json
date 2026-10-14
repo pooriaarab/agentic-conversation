@@ -1,14 +1,16 @@
 {
   "name": "agentic-chat",
-  "version": "0.1.0",
-  "description": "Send one opted-in chat message with safe dry runs.",
+  "version": "0.1.1",
+  "description": "Send one opted-in WhatsApp, Telegram, or Facebook Messenger message from a safe CLI, MCP server, or agent.",
   "keywords": [
     "whatsapp",
     "telegram",
+    "facebook-messenger",
     "messenger",
-    "mcp",
+    "send-message",
     "cli",
-    "agentic"
+    "mcp",
+    "agent"
   ],
   "license": "MIT",
   "author": "Pooria Arab",
