@@ -1,22 +1,22 @@
 {
-  "name": "@pooriaarab/agentic-scaffold",
+  "name": "agentic-chat",
   "version": "0.1.0",
-  "description": "Canonical scaffold for a CLI plus library plus MCP server pack.",
+  "description": "Send one opted-in chat message with safe dry runs.",
   "keywords": [
-    "cli",
+    "whatsapp",
+    "telegram",
+    "messenger",
     "mcp",
-    "scaffold",
-    "starter",
-    "typescript"
+    "cli",
+    "agentic"
   ],
   "license": "MIT",
   "author": "Pooria Arab",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pooriaarab/agentic-scaffold.git"
+    "url": "https://github.com/pooriaarab/agentic-chat.git"
   },
   "type": "module",
-  "private": true,
   "engines": {
     "node": ">=18"
   },
@@ -26,7 +26,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "mcpName": "io.github.pooriaarab/agentic-scaffold",
+  "mcpName": "io.github.pooriaarab/agentic-chat",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -36,8 +36,8 @@
     }
   },
   "bin": {
-    "agentic-pack": "./dist/cli.js",
-    "agentic-pack-mcp": "./dist/mcp-bin.js"
+    "agentic-chat": "./dist/cli.js",
+    "agentic-chat-mcp": "./dist/mcp-bin.js"
   },
   "scripts": {
     "build": "tsup",
@@ -47,7 +47,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
-    "zod": "^3.25.0"
+    "zod": "^3.25.0",
+    "agentic-core": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

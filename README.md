@@ -1,108 +1,72 @@
-# Agentic scaffold
+# agentic-chat
 
-Canonical scaffold for a CLI plus library plus MCP server pack.
+Send one message to an opted-in contact.
 
-Clone this repo to start a new pack. It gives one core with three
-faces: a terminal command, an npm import, and an MCP server.
+WhatsApp, Telegram, or Messenger. Dry run is the default.
 
-## What you get
+## Install
 
-- One core: brand config, logs, guards, routing, dry run, cost reports.
-- Three faces over that core: CLI, library, MCP server.
-- A frozen core contract, so packs share one API.
-- A worker entry and a wrangler sample for edge deploys.
-- Build, typecheck, and tests that pass from a fresh clone.
+```sh
+npm install agentic-chat
+```
 
 ## Quick start
 
-```sh
-git clone https://github.com/pooriaarab/agentic-scaffold.git my-pack
-cd my-pack
-npm install
-npm run build
-npm run typecheck
-npm test
-```
-
-Run the command:
+This previews a Telegram message. It does not send it.
 
 ```sh
-node dist/cli.js summary --text "hello world hello"
+npx agentic-chat send --channel telegram --contact fixture-contact \
+  --message "Hello" --opted-in true
 ```
 
-Call the library:
+Add `--live` only after you configure a vendor adapter in your app. A
+live call without one returns a clear error. Vendor errors are returned
+unchanged.
+
+## Three uses
+
+### CLI
+
+Use the command to preview one message. Pass `--live` to deliver.
+
+```sh
+agentic-chat send --channel whatsapp --contact fixture-contact \
+  --message "Hello" --opted-in true
+```
+
+### Library
+
+Use the same JSON shape in code.
 
 ```js
-import { summarizeText } from "./dist/index.js";
+import { sendMessage } from "agentic-chat";
 
-console.log(summarizeText("hello world hello"));
+const preview = await sendMessage({
+  channel: "telegram",
+  contact: "fixture-contact",
+  message: "Hello",
+  optedIn: true,
+});
 ```
 
-Start the MCP server:
+### MCP
+
+Start the server and call `send_message` or `log_stop`.
 
 ```sh
-node dist/cli.js mcp
+npx agentic-chat mcp
 ```
 
-## Three usecases
+`send_message` is dry run by default. It requires `optedIn: true`.
+Give it quiet hours to stop sends during that window. Use `log_stop` to
+record an inbound `STOP` opt-out.
 
-1. You run one text summary from the terminal.
-2. You import the summary function in a script.
-3. You let an agent call the same function as an MCP tool.
+## Safety
 
-## Clone checklist
-
-This repo is a template. Replace each slot in each file that holds it.
-
-- `__PACK_NAME__`: the directory name, like `my-pack`.
-- `__NPM_NAME__`: the npm name, like `agentic-<block>` (bare name, never @pooriaarab/ scoped unless the brief says scoped).
-- `__PACK_COMMAND__`: the terminal command, like `my-pack`.
-- `__PACK_DESCRIPTION__`: one plain sentence, under 100 chars.
-- `__PACK_KEYWORDS__`: plain keywords, like `notes, search, cli`.
-- `__GITHUB_USER__`: the repo owner, like `pooriaarab`.
-
-Slot files: `AGENTS.md`, `SKILL.md`, `RULES.md`, `llms.txt`,
-`server.json`, `.mcp.json`, `wrangler.jsonc`.
-
-Then rename the scaffold identity itself:
-
-- `package.json`: name, bin commands, mcpName. Remove `"private": true`.
-- `src/index.ts`: the `DEFAULT_BRAND` fields.
-- This file: the pitch and the examples above.
-
-At publish time, set `server.json` version to the npm version and
-`server.json` repository id from `gh api repos/OWNER/REPO --jq .id`.
-
-## Gates
-
-Run all three before you push a pack:
-
-```sh
-npm run build && npm run typecheck && npm test
-```
-
-Then run the real installed CLI once from a tarball:
-
-```sh
-npm pack
-npx --yes --package ./pooriaarab-agentic-scaffold-0.1.0.tgz agentic-pack summary --text "hello"
-```
-
-## Release flow
-
-Push to `main` for review. Merge to `release` to publish. The
-publish workflow ships only when the version is new.
-
-## Layout
-
-- `src/index.ts`: the library face.
-- `src/cli.ts`: the terminal face.
-- `src/mcp.ts`: the MCP server. `src/mcp-bin.ts` starts it.
-- `src/worker.ts`: the edge worker face.
-- `src/core.ts`: the shared core.
-- `agentic-core.d.ts`: the frozen contract.
-- `docs/agentic-core.md`: the contract in plain words.
+The pack does not send to contacts that have not opted in. It honors
+quiet hours. It logs STOP events. Tests use fixtures and make no network
+calls.
 
 ## License
 
-MIT. See `LICENSE`.
+MIT
